@@ -1,45 +1,40 @@
-import Image, { StaticImageData } from 'next/image';
-import React, { ReactNode, useState } from 'react';
+import { useTree } from '@/states/tree';
+import { StaticImageData } from 'next/image';
+import { ReactNode } from 'react';
+import { TreeNode } from '../types/generic';
+import { ComponentItem } from './tree/component-item';
 
 type CollapseProps = {
-  title: string;
+  item: TreeNode;
   children?: ReactNode;
   icon?: StaticImageData;
+  onOpenChange?: (open: boolean) => void;
 };
 
-export function Collapse({ title, children, icon }: CollapseProps)  {
-  const [isOpen, setIsOpen] = useState(false);
+export function Collapse({
+  item,
+  children,
+  icon,
+  onOpenChange,
+}: CollapseProps) {
+  const { treeOpenById } = useTree();
   const isEmptyCollapse = !children;
 
   const toggleCollapse = () => {
-    setIsOpen((prev) => !prev);
+    onOpenChange?.(!treeOpenById[item.id]);
   };
 
   return (
-    <div className="border rounded-md shadow-md">
-      <button
-        onClick={isEmptyCollapse ? undefined : toggleCollapse}
-        className="w-full text-left px-4 py-2 bg-gray-200 hover:bg-gray-300 focus:outline-none"
-      >
-        <div className="flex justify-between items-center">
-          <div className='flex items-center gap-4'>
+    <div className="rounded-md shadow-md flex w-full flex-col flex-nowrap ">
+      <ComponentItem item={item} icon={icon} onClick={toggleCollapse}>
+        {!isEmptyCollapse && <span>{!!treeOpenById[item.id] ? '▲' : '▼'}</span>}
+      </ComponentItem>
 
-          {icon && (
-            <Image
-            src={icon?.src}
-            alt="icon"
-            width={icon?.width}
-            height={icon?.height}
-            />
-          )}
-          <span>{title}</span>
-          </div>
-          {!isEmptyCollapse && <span>{isOpen ? '▲' : '▼'}</span>}
+      {!!treeOpenById[item.id] && (
+        <div className="ml-4 py-2 flex justify-end bg-white  flex-col">
+          {children}
         </div>
-      </button>
-      {isOpen && <div className="px-4 py-2 bg-white border-t">{children}</div>}
+      )}
     </div>
   );
-};
-
-
+}

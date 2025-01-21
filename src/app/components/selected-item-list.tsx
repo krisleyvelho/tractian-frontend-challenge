@@ -1,5 +1,7 @@
+import { useSelectEntity } from '@/states/company';
 import { ReactNode } from 'react';
 import { FileInput } from './file-input';
+import { ComponentStatus } from './tree/component-status';
 
 interface ItemProps {
   title: string;
@@ -15,27 +17,16 @@ function Item({ title, value }: ItemProps) {
 }
 
 export function SelectedItemList() {
-  const selectedEntity = {
-    gatewayId: 'QLW221',
-    id: '607a124af70f5b001e041c22',
-    locationId: '607a11a07a51520020945cd6',
-    name: 'Sensor 7 - energy',
-    parentId: null,
-    sensorId: 'PLC453',
-    sensorType: 'energy',
-    status: 'operating',
-  };
+  const { selectedEntity } = useSelectEntity();
 
-  const iconByStatus: Record<string, any> = {
-    operating: <div className="w-4 h-4 bg-green-500 rounded-full"></div>,
-    broken: <div className="w-4 h-4 bg-red-500 rounded-full"></div>,
-    unknown: <div className="w-4 h-4 bg-yellow-500 rounded-full"></div>,
-  };
+  if (!selectedEntity) {
+    return <div>Selecione um ativo</div>;
+  }
 
   return (
     <div className="flex w-full h-full flex-col">
       <div className="flex w-full p-2 gap-2 justify-start h-fit border-b-[1px] border-defaultSlate">
-        {selectedEntity.name} {iconByStatus[selectedEntity.status]}
+        {selectedEntity.name} <ComponentStatus status={selectedEntity.status} />
       </div>
       <div className="flex gap-4  p-2">
         <FileInput />
