@@ -1,5 +1,3 @@
-// import { db } from './db';
-
 import { z } from 'zod';
 import { publicProcedure, createTRPCRouter, apiUrl } from '../trpc';
 import { Company, CompanyAsset, CompanyLocation } from '@/app/types/generic';
