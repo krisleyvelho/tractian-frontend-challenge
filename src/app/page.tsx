@@ -4,7 +4,6 @@ import { Info, Zap } from 'lucide-react';
 import { useState } from 'react';
 import { BreadCrumb } from './components/breadcrumb';
 import { Button } from './components/button';
-// import { NewTree } from './components/new_tree';
 import { Tree } from './components/tree';
 import { SearchBar } from './components/search';
 import { SelectedItemList } from './components/selected-item-list';
@@ -51,8 +50,7 @@ export default function Home() {
             className="w-full p-2"
             placeholder="Buscar ativo ou local"
           />
-          <NewTree />
-          {/* <Tree /> */}
+          <Tree />
         </div>
         <div className="border-[1px] border-defaultSlate w-full">
           <SelectedItemList />
