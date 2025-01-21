@@ -15,10 +15,12 @@ export default {
   			backgroundBlue: '#17192D',
   			activeBlue: '#2188FF',
   			defaultBlue: '#023B78',
-  			'container-bg-color': '#D8DFE6',
   			'title-active-color': '#24292F',
   			'title-inactive-color': '#77818C'
   		},
+			borderColor: {
+				defaultSlate: '#D8DFE6'
+			},
   		backgroundColor: {
   			'body-slate': '#D8DFE6'
   		},

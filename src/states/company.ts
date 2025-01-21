@@ -1,3 +1,4 @@
+import { CompanyAsset, CompanyLocation } from '@/app/types/generic';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
@@ -22,4 +23,19 @@ export const useSelectedCompany = create<SelectedCompanyType>()(
       }),
     }
   )
+);
+
+interface SelectedEntityType {
+  selectedEntity: CompanyAsset | CompanyLocation | undefined;
+  setSelectedEntity: (
+    SelectedEntity: SelectedEntityType['selectedEntity']
+  ) => void;
+}
+
+export const useSelectEntity = create<SelectedEntityType>()(
+    (set) => ({
+      selectedEntity: undefined,
+      setSelectedEntity(selectedEntity) {
+        set(() => ({ selectedEntity: selectedEntity }));
+      }})
 );

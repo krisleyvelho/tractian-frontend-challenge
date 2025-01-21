@@ -7,7 +7,6 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 
 
 export function Button({ icon, children, active, className, ...props }: ButtonProps) {
-  console.log("🚀 ~ Button ~ icon:", icon)
   let activeClassName;
 
   if (active) {
