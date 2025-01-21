@@ -2,28 +2,9 @@
 
 import { z } from 'zod';
 import { publicProcedure, createTRPCRouter, apiUrl } from '../trpc';
+import { Company, CompanyAsset, CompanyLocation } from '@/app/types/generic';
 
-interface Company {
-  id: string;
-  name: string;
-}
 
-interface CompanyLocation {
-  id: string;
-  name: string;
-  parentId: string | undefined;
-}
-
-interface CompanyAsset {
-  gatewayId?: string
-  id: string
-  locationId: string
-  name: string
-  parentId: any
-  sensorId?: string
-  sensorType?: string
-  status: string
-}
 
 export const companiesRouter = createTRPCRouter({
   getCompanies: publicProcedure.query(async ({ ctx }) => {

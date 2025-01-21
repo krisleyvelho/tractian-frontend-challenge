@@ -27,13 +27,12 @@ export default function RootLayout({
   return (
     <html lang="pt-BR">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-body-slate flex flex-col h-screen`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-white flex flex-col h-screen`}
       >
         <TrpcProvider>
           <>
             <Header />
-            <div className='flex w-full overflow-y-auto p-4 h-full border-slate-500'>{children}</div>
-            {/* <div className='p-4 m-4 border-[1px] border-black flex h-full'>{children}</div> */}
+            <div className='flex w-full overflow-y-auto p-4 h-full border-defaultSlate'>{children}</div>
           </>
         </TrpcProvider>
       </body>
