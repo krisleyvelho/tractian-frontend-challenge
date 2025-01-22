@@ -52,3 +52,28 @@ export function recursiveFilterBySensorType(
     })
     .filter(Boolean) as TreeNode[];
 }
+
+function idExistsInTree(id: string, tree: TreeNode[]): boolean {
+  for (const item of tree) {
+    if (item.id === id) return true;
+
+    if (item.children && item.children.length > 0) {
+      return !!idExistsInTree(id, item.children);
+    }
+  }
+  return false;
+}
+
+export function mountFilteredTree(currentTree: Record<string, TreeNode[]>) {
+  let data: TreeNode[] = [];
+
+  Object.entries(currentTree).forEach(([key, value]) => {
+    value.forEach((node) => {
+      if (!idExistsInTree(node.id, data)) {
+        data.push(node);
+      }
+    });
+  });
+
+  return data;
+}

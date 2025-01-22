@@ -1,27 +1,35 @@
 'use client';
 
+import { TreeNode } from '@/app/types/generic';
 import { useSelectedCompany } from '@/states/company';
 import { useTree } from '@/states/tree';
 import { api } from '@/trpc/client';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { mountFilteredTree } from './filters';
 import { mountDefaultTree } from './mount-default-tree';
 import { TreeItem } from './tree-item';
 
 export function Tree() {
   const { idSelectedCompany } = useSelectedCompany();
   const {
+    defaultTree,
     currentTree,
 
     setDefaultTree,
   } = useTree();
 
-  const { data: locationList } = api.companies.locationsOfCompany.useQuery({
-    companyId: idSelectedCompany!,
-  });
+  const [currentTreeShow, setCurrentTreeShow] = useState<TreeNode[]>([]);
+  const [isProcessingTree, setIsProcessingTree] = useState(false);
 
-  const { data: assetsList } = api.companies.assetsOfCompany.useQuery({
-    companyId: idSelectedCompany!,
-  });
+  const { data: locationList, isLoading: isLoadingLocation } =
+    api.companies.locationsOfCompany.useQuery({
+      companyId: idSelectedCompany!,
+    });
+
+  const { data: assetsList, isLoading: isLoadingAssets } =
+    api.companies.assetsOfCompany.useQuery({
+      companyId: idSelectedCompany!,
+    });
 
   useEffect(() => {
     if (locationList && assetsList) {
@@ -31,16 +39,36 @@ export function Tree() {
     }
   }, [locationList, assetsList, setDefaultTree]);
 
-  if (!currentTree?.length)
-    return (
-      <div className="flex p-4 justify-center">
-        Não foram encontrados ativos
-      </div>
-    );
+  useEffect(() => {
+    const {
+      'critital-sensor-status': crititalSensorStatus,
+      'energy-sensors': energySensors,
+      text,
+    } = currentTree;
+    setIsProcessingTree(true);
+
+    if (crititalSensorStatus.length || energySensors.length || text.length) {
+      setCurrentTreeShow(mountFilteredTree(currentTree));
+
+      setIsProcessingTree(false);
+      return;
+    }
+
+    setCurrentTreeShow(defaultTree!);
+    setIsProcessingTree(false);
+  }, [currentTree, defaultTree]);
+
+  if (isProcessingTree) return <div>Processando dados...</div>;
+
+  if (isLoadingLocation || isLoadingAssets)
+    return <div>Carregando dados...</div>;
+
+  if (!currentTreeShow?.length || !defaultTree?.length)
+    return <div>Não há dados para mostrar</div>;
 
   return (
     <div className="max-h-full overflow-y-auto">
-      {currentTree?.map((item) => (
+      {currentTreeShow?.map((item) => (
         <TreeItem item={item} key={item.id} />
       ))}
     </div>

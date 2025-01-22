@@ -4,8 +4,8 @@ import { useTree } from '@/states/tree';
 import { Info, Zap } from 'lucide-react';
 import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
 import { TreeNode } from '../types/generic';
-import { BreadCrumb } from './ui/breadcrumb';
 import { recursiveFilterBySensorType } from './tree/filters';
+import { BreadCrumb } from './ui/breadcrumb';
 import { Button } from './ui/button';
 
 type BtnListType = {
@@ -19,9 +19,11 @@ type ActivatedFiltersType = {
   'critital-sensor-status': boolean;
 };
 
-type BackupCurrentTreeType = {
-  [key in keyof ActivatedFiltersType]: TreeNode[] | undefined;
-};
+type ToggleFilterFunctionType = (
+  filterKey: keyof ActivatedFiltersType,
+  filterField: keyof Pick<TreeNode, 'sensorType' | 'status'>,
+  filterValue: string
+) => void;
 
 export function SubHeader() {
   const [activatedFilters, setActivatedFilters] =
@@ -29,90 +31,70 @@ export function SubHeader() {
       'critital-sensor-status': false,
       'energy-sensors': false,
     });
-  const { currentTree, setCurrentTree, toggleAllNodes } = useTree();
+  const { currentTree, setCurrentTree, toggleAllNodes, defaultTree } =
+    useTree();
 
-  const [currentTreeBeforeFilter, setCurrentTreeBeforeFilter] =
-    useState<BackupCurrentTreeType>({
-      'critital-sensor-status': currentTree,
-      'energy-sensors': currentTree,
-    });
+  const toggleSelectedFilter = useCallback(
+    (key: keyof ActivatedFiltersType) => {
+      setActivatedFilters((prev) => ({ ...prev, [key]: !prev[key] }));
+    },
+    [setActivatedFilters]
+  );
 
-  const toggleFilterEnergySensor = useCallback(() => {
-    if (!activatedFilters['energy-sensors']) {
-      setActivatedFilters((prev) => ({ ...prev, 'energy-sensors': true }));
-      const fTree = recursiveFilterBySensorType(
-        currentTree!,
-        'sensorType',
-        'energy'
-      );
-      setCurrentTreeBeforeFilter((prev) => ({
-        ...prev,
-        'energy-sensors': currentTree,
-      }));
-      setCurrentTree(fTree);
-      toggleAllNodes(fTree, 'open');
-      return;
-    }
-    setActivatedFilters((prev) => ({ ...prev, 'energy-sensors': false }));
-    toggleAllNodes(currentTree!, 'close');
-    setCurrentTree(currentTreeBeforeFilter['energy-sensors']);
-  }, [
-    activatedFilters,
-    currentTree,
-    currentTreeBeforeFilter,
-    setCurrentTree,
-    toggleAllNodes,
-  ]);
-
-  const toggleCriticalSensorStatus = useCallback(() => {
-    if (!activatedFilters['critital-sensor-status']) {
-      setActivatedFilters((prev) => ({
-        ...prev,
-        'critital-sensor-status': true,
-      }));
-      const fTree = recursiveFilterBySensorType(
-        currentTree!,
-        'status',
-        'alert'
-      );
-      setCurrentTree(fTree);
-      setCurrentTreeBeforeFilter((prev) => ({
-        ...prev,
-        'critital-sensor-status': currentTree,
-      }));
-      toggleAllNodes(fTree, 'open');
-      return;
-    }
-    setActivatedFilters((prev) => ({
-      ...prev,
-      'critital-sensor-status': false,
-    }));
-    toggleAllNodes(currentTree!, 'close');
-    setCurrentTree(currentTreeBeforeFilter['critital-sensor-status']);
-  }, [
-    activatedFilters,
-    currentTree,
-    currentTreeBeforeFilter,
-    toggleAllNodes,
-    setCurrentTree,
-  ]);
+  const toggleFilter: ToggleFilterFunctionType = useCallback(
+    (filterKey, filterField, filterValue) => {
+      if (!activatedFilters[filterKey]) {
+        toggleSelectedFilter(filterKey);
+        const fTree = recursiveFilterBySensorType(
+          defaultTree!,
+          filterField,
+          filterValue
+        );
+        setCurrentTree({ ...currentTree, [filterKey]: fTree });
+        toggleAllNodes(fTree, 'open');
+        return;
+      }
+      toggleSelectedFilter(filterKey);
+      toggleAllNodes(currentTree[filterKey], 'close');
+      setCurrentTree({ ...currentTree, [filterKey]: [] });
+    },
+    [
+      activatedFilters,
+      currentTree,
+      toggleSelectedFilter,
+      setCurrentTree,
+      toggleAllNodes,
+      defaultTree,
+    ]
+  );
 
   const btnList: BtnListType[] = useMemo(
     () => [
       {
         id: 'energy-sensors',
         name: 'Sensor de energia',
-        icon: <Zap className='size-5 data-[selected=true]:text-white text-activeBlue' data-selected={!!activatedFilters['energy-sensors']} />,
-        onClick: toggleFilterEnergySensor,
+        icon: (
+          <Zap
+            className="size-5 data-[selected=true]:text-white text-activeBlue"
+            data-selected={!!activatedFilters['energy-sensors']}
+          />
+        ),
+        onClick: () => toggleFilter('energy-sensors', 'sensorType', 'energy'),
       },
       {
         name: 'Crítico',
         id: 'critital-sensor-status',
-        icon: <Info className='size-5 data-[selected=true]:text-white text-activeBlue' data-selected={!!activatedFilters['critital-sensor-status']}/>,
-        onClick: toggleCriticalSensorStatus,
+        icon: (
+          <Info
+            className="size-5 data-[selected=true]:text-white text-activeBlue"
+            data-selected={!!activatedFilters['critital-sensor-status']}
+          />
+        ),
+        onClick: () =>
+          toggleFilter('critital-sensor-status', 'status', 'alert'),
       },
     ],
-    [toggleCriticalSensorStatus, toggleFilterEnergySensor, activatedFilters]
+    [toggleFilter, activatedFilters]
   );
 
   useEffect(() => {

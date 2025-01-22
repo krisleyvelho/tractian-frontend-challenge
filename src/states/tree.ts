@@ -1,10 +1,12 @@
 import { TreeNode } from '@/app/types/generic';
 import { create } from 'zustand';
 
+type FilterKey = 'energy-sensors' | 'critital-sensor-status' | 'text';
+
 interface TreeType {
   defaultTree: TreeNode[] | undefined;
   setDefaultTree: (tree: TreeType['defaultTree']) => void;
-  currentTree: TreeNode[] | undefined;
+  currentTree: Record<FilterKey, TreeNode[]>;
   setCurrentTree: (currentTree: TreeType['currentTree']) => void;
   treeOpenById: Record<string, boolean>;
   setTreeOpenById: (treeOpenById: TreeType['treeOpenById']) => void;
@@ -15,9 +17,8 @@ interface TreeType {
 
 export const useTree = create<TreeType>()((set, get) => ({
   defaultTree: undefined,
-  setDefaultTree: (defaultTree) =>
-    set(() => ({ defaultTree, currentTree: defaultTree })),
-  currentTree: undefined,
+  setDefaultTree: (defaultTree) => set(() => ({ defaultTree })),
+  currentTree: { 'critital-sensor-status': [], 'energy-sensors': [], text: [] },
   setCurrentTree: (tree) => set(() => ({ currentTree: tree })),
   treeOpenById: {},
   setTreeOpenById: (treeOpenById) => set(() => ({ treeOpenById })),
@@ -44,7 +45,11 @@ export const useTree = create<TreeType>()((set, get) => ({
   },
   resetTree: () => {
     set(() => ({
-      currentTree: undefined,
+      currentTree: {
+        'critital-sensor-status': [],
+        'energy-sensors': [],
+        text: [],
+      },
       defaultTree: undefined,
       treeOpenById: {},
     }));

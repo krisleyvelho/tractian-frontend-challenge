@@ -12,8 +12,8 @@ export function SearchBar({ ...props }: SearchBarProps) {
     useTree();
   const textSearchRef = useRef<HTMLInputElement>(null);
 
-  function resetDefaultTree() {
-    setCurrentTree(defaultTree);
+  function resetCurrentTree() {
+    setCurrentTree({ ...currentTree, text: [] });
     toggleAllNodes(defaultTree!, 'close');
     if (textSearchRef?.current?.value) {
       textSearchRef.current.value = '';
@@ -21,30 +21,30 @@ export function SearchBar({ ...props }: SearchBarProps) {
   }
 
   function onTextSearch() {
-    if (!currentTree) return;
+    if (!defaultTree) return;
     const text = textSearchRef?.current?.value.toUpperCase();
     if (!text && currentTree) {
-      resetDefaultTree();
+      resetCurrentTree();
       return;
     }
-
-    let fTree = recursiveTextFilterInTree(currentTree, text!);
-
-    if (!fTree.length) {
-      fTree = recursiveTextFilterInTree(defaultTree!, text!);
-    }
+    const fTree = recursiveTextFilterInTree(defaultTree, text!);
 
     toggleAllNodes(fTree, 'open');
-    setCurrentTree(fTree);
+    setCurrentTree({ ...currentTree, text: fTree });
   }
   return (
     <div className="flex gap-4 items-center bg-white border-b border-defaultSlate ">
-      <input type="text" ref={textSearchRef} onKeyUp={(e) => e.key === 'Enter' && onTextSearch()} {...props} />
+      <input
+        type="text"
+        ref={textSearchRef}
+        onKeyUp={(e) => e.key === 'Enter' && onTextSearch()}
+        {...props}
+      />
       <div className="flex gap-2 items-center px-2">
         {textSearchRef?.current?.value && (
           <CircleXIcon
             className="text-title-active-color size-5  hover:cursor-pointer"
-            onClick={() => resetDefaultTree()}
+            onClick={() => resetCurrentTree()}
           />
         )}
         <Search
