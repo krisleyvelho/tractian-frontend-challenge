@@ -6,6 +6,7 @@ import { StaticImageData } from 'next/image';
 import { useState } from 'react';
 import { ImageAsIcon } from '../image-as-icon';
 import { ComponentStatus } from './component-status';
+import { Button } from '../ui/button';
 
 interface ComponentItemProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -18,7 +19,6 @@ export function ComponentItem({
   item,
   icon,
   children,
-  className,
   ...props
 }: ComponentItemProps) {
   const { selectedEntity } = useSelectEntity();
@@ -30,13 +30,16 @@ export function ComponentItem({
       : '';
 
   return (
-    <button
-      className={` flex hover:bg-activeBlue hover:text-white justify-between p-1 data-[selected=true]:bg-activeBlue data-[selected=true]:text-white w-full ${className}`}
-      {...props}
-      onMouseEnter={() => setTransformImage(true)}
+    <Button
       onMouseLeave={() => setTransformImage(false)}
+      onMouseEnter={() => setTransformImage(true)}
+      size={'none'}
+      variant={'itemTree'}
+      className="font-normal p-1 whitespace-normal"
+      {...props}
     >
       {children}
+
       <div className="flex items-center justify-start w-full px-1 gap-2">
         {icon && (
           <ImageAsIcon
@@ -49,6 +52,6 @@ export function ComponentItem({
         <span className="text-left font-roboto text-sm">{item.name}</span>
         <ComponentStatus status={'status' in item ? item.status : undefined} />
       </div>
-    </button>
+    </Button>
   );
 }
