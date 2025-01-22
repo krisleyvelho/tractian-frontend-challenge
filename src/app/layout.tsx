@@ -1,8 +1,9 @@
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
-import Header from './components/header';
+import Header from './components/ui/header';
 import { TrpcProvider } from '@/trpc/client/trpcProvider';
+import { SubHeader } from './components/sub-header';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -27,12 +28,18 @@ export default function RootLayout({
   return (
     <html lang="pt-BR">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-white flex flex-col h-screen`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-white flex flex-col h-screen `}
       >
         <TrpcProvider>
           <>
             <Header />
-            <div className='flex w-full overflow-y-auto p-4 h-full border-defaultSlate'>{children}</div>
+            <div className="flex p-4 border-defaultSlate size-full overflow-auto flex-col"> 
+              <div className="flex w-full h-full flex-col gap-4 border-defaultSlate border-[1px] rounded-sm p-2 ">
+                <SubHeader />
+
+                {children}
+              </div>
+            </div>
           </>
         </TrpcProvider>
       </body>

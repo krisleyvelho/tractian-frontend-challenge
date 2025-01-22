@@ -1,18 +1,14 @@
 import Image, { StaticImageData } from 'next/image';
 
 interface ImageAsIconProps
-  extends React.ImgHTMLAttributes<HTMLImageElement> {
+  extends Omit<React.ImgHTMLAttributes<HTMLImageElement>, 'width' | 'height'> {
   icon: StaticImageData;
 }
 
 export function ImageAsIcon({ icon, ...props }: ImageAsIconProps) {
-  return (
-    <Image
-      src={icon.src}
-      alt="icon"
-      width={icon?.width as any}
-      height={icon?.height as any}
-      {...props}
-    />
-  );
+  if (typeof icon.width !== 'number' || typeof icon.height !== 'number') {
+    throw new Error('The icon must have numeric width and height properties.');
+  }
+
+  return <Image src={icon} alt={''} {...props} />;
 }

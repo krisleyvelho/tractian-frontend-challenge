@@ -17,7 +17,7 @@ export interface CompanyAsset {
   parentId?: string;
   sensorId?: string;
   sensorType?: string;
-  status: string;
+  status?: string;
 }
 export interface TreeAsset extends CompanyAsset {
   children?: TreeNode[];
@@ -29,4 +29,4 @@ export interface TreeLocation extends CompanyLocation {
   dataType: 'location';
 }
 
-export type TreeNode = TreeLocation | TreeAsset;
+export type TreeNode = (TreeLocation | TreeAsset) & Partial<CompanyAsset>;

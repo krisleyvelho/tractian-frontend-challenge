@@ -29,10 +29,14 @@ export function recursiveTextFilterInTree(
     .filter(Boolean) as TreeNode[];
 }
 
-export function recursiveFilterBySensorType(tree: TreeNode[], key: string, valueExpected: string): TreeNode[] {
+export function recursiveFilterBySensorType(
+  tree: TreeNode[],
+  key: keyof TreeNode,
+  valueExpected: string
+): TreeNode[] {
   return tree
     .map((node) => {
-      const matches = (node as any)[key] === valueExpected;
+      const matches = node[key] === valueExpected;
       const filteredChildren = node.children
         ? recursiveFilterBySensorType(node.children, key, valueExpected)
         : [];

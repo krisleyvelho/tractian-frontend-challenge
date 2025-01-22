@@ -9,7 +9,7 @@ export function BreadCrumb() {
     (company) => company.id === idSelectedCompany
   );
   return (
-    <div className='flex gap-4 items-center '>
+    <div className='flex gap-3 items-center '>
       <h2 className='font-bold text-xl text-title-active-color'>Ativos</h2>
       <span className='text-sm text-title-inactive-color'>{`/ ${currentCompany?.name}`}</span>
     </div>

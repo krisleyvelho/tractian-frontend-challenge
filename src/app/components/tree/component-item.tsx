@@ -1,15 +1,17 @@
-import { StaticImageData } from 'next/image';
-import { ImageAsIcon } from '../image-as-icon';
+'use client';
+
+import { CompanyAsset, TreeNode } from '@/app/types/generic';
 import { useSelectEntity } from '@/states/company';
-import { useEffect, useState } from 'react';
-import { TreeNode } from '@/app/types/generic';
+import { StaticImageData } from 'next/image';
+import { useState } from 'react';
+import { ImageAsIcon } from '../image-as-icon';
 import { ComponentStatus } from './component-status';
 
 interface ComponentItemProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   icon?: StaticImageData;
   active?: boolean;
-  item: TreeNode;
+  item: TreeNode | CompanyAsset;
 }
 
 export function ComponentItem({
@@ -29,24 +31,24 @@ export function ComponentItem({
 
   return (
     <button
-      className={`flex hover:bg-activeBlue hover:text-white justify-between my-1 p-2 data-[selected=true]:bg-activeBlue data-[selected=true]:text-white w-full ${className}`}
+      className={` flex hover:bg-activeBlue hover:text-white justify-between p-1 data-[selected=true]:bg-activeBlue data-[selected=true]:text-white w-full ${className}`}
       {...props}
       onMouseEnter={() => setTransformImage(true)}
       onMouseLeave={() => setTransformImage(false)}
     >
-      <div className="flex items-center gap-4">
+      {children}
+      <div className="flex items-center justify-start w-full px-1 gap-2">
         {icon && (
           <ImageAsIcon
             icon={icon}
             data-selected={selectedEntity?.id === item.id}
             style={{ filter: imageWithWhiteEffect }}
+            className="w-7 h-7"
           />
         )}
-        <span className="text-left">{item.name}</span>
-        <ComponentStatus status={item.status} />
+        <span className="text-left font-roboto text-sm">{item.name}</span>
+        <ComponentStatus status={'status' in item ? item.status : undefined} />
       </div>
-
-      {children}
     </button>
   );
 }

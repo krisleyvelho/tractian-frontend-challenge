@@ -2,10 +2,8 @@ import { z } from 'zod';
 import { publicProcedure, createTRPCRouter, apiUrl } from '../trpc';
 import { Company, CompanyAsset, CompanyLocation } from '@/app/types/generic';
 
-
-
 export const companiesRouter = createTRPCRouter({
-  getCompanies: publicProcedure.query(async ({ ctx }) => {
+  getCompanies: publicProcedure.query(async () => {
     const response = await fetch(`${apiUrl}/companies`);
 
     if (!response.ok) {
@@ -28,7 +26,7 @@ export const companiesRouter = createTRPCRouter({
   }),
   locationsOfCompany: publicProcedure
     .input(z.object({ companyId: z.string() }))
-    .query(async ({ ctx, input: { companyId } }) => {
+    .query(async ({ input: { companyId } }) => {
       const response = await fetch(
         `${apiUrl}/companies/${companyId}/locations`
       );
@@ -45,7 +43,7 @@ export const companiesRouter = createTRPCRouter({
     }),
   assetsOfCompany: publicProcedure
     .input(z.object({ companyId: z.string() }))
-    .query(async ({ ctx, input: { companyId } }) => {
+    .query(async ({ input: { companyId } }) => {
       const response = await fetch(`${apiUrl}/companies/${companyId}/assets`);
 
       if (!response.ok) {

@@ -3,6 +3,7 @@ import { StaticImageData } from 'next/image';
 import { ReactNode } from 'react';
 import { TreeNode } from '../types/generic';
 import { ComponentItem } from './tree/component-item';
+import { ChevronDown, ChevronUp } from 'lucide-react';
 
 type CollapseProps = {
   item: TreeNode;
@@ -25,13 +26,18 @@ export function Collapse({
   };
 
   return (
-    <div className="rounded-md shadow-md flex w-full flex-col flex-nowrap ">
+    <div className="rounded-md flex w-full flex-col flex-nowrap">
       <ComponentItem item={item} icon={icon} onClick={toggleCollapse}>
-        {!isEmptyCollapse && <span>{!!treeOpenById[item.id] ? '▲' : '▼'}</span>}
+        {!isEmptyCollapse &&
+          (!!treeOpenById[item.id] ? (
+            <ChevronUp className="size-5" />
+          ) : (
+            <ChevronDown className="size-5" />
+          ))}
       </ComponentItem>
 
       {!!treeOpenById[item.id] && (
-        <div className="ml-4 py-2 flex justify-end bg-white  flex-col">
+        <div className="ml-3 py-2 flex justify-end border-l border-defaultSlate flex-col">
           {children}
         </div>
       )}

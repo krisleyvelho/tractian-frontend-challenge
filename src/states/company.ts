@@ -1,4 +1,4 @@
-import { CompanyAsset, CompanyLocation } from '@/app/types/generic';
+import { CompanyAsset } from '@/app/types/generic';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
@@ -26,7 +26,7 @@ export const useSelectedCompany = create<SelectedCompanyType>()(
 );
 
 interface SelectedEntityType {
-  selectedEntity: CompanyAsset | CompanyLocation | undefined;
+  selectedEntity: CompanyAsset | undefined;
   setSelectedEntity: (
     SelectedEntity: SelectedEntityType['selectedEntity']
   ) => void;

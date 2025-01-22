@@ -15,11 +15,12 @@ interface TreeType {
 
 export const useTree = create<TreeType>()((set, get) => ({
   defaultTree: undefined,
-  setDefaultTree: (defaultTree) => set(() => ({ defaultTree, currentTree: defaultTree })),
+  setDefaultTree: (defaultTree) =>
+    set(() => ({ defaultTree, currentTree: defaultTree })),
   currentTree: undefined,
   setCurrentTree: (tree) => set(() => ({ currentTree: tree })),
   treeOpenById: {},
-  setTreeOpenById: (treeOpenById) => set((partial) => ({ treeOpenById })),
+  setTreeOpenById: (treeOpenById) => set(() => ({ treeOpenById })),
   incrementTreeOpenById: (data) =>
     set((partial) => {
       const newValue = { ...partial.treeOpenById, ...data };
@@ -27,7 +28,10 @@ export const useTree = create<TreeType>()((set, get) => ({
     }),
   toggleAllNodes: (tree, action) => {
     const incrementTreeOpenById = get().incrementTreeOpenById;
-    const toggleNodes = (nodes: TreeNode[], action: 'open' | 'close'): boolean[] => {
+    const toggleNodes = (
+      nodes: TreeNode[],
+      action: 'open' | 'close'
+    ): boolean[] => {
       return nodes.map((node) => {
         incrementTreeOpenById({ [node.id]: action === 'open' });
         if (node.children?.[0]) {
@@ -39,7 +43,10 @@ export const useTree = create<TreeType>()((set, get) => ({
     return toggleNodes(tree, action);
   },
   resetTree: () => {
-    set(() => ({ currentTree: undefined, defaultTree: undefined, treeOpenById: {} }));
+    set(() => ({
+      currentTree: undefined,
+      defaultTree: undefined,
+      treeOpenById: {},
+    }));
   },
 }));
-

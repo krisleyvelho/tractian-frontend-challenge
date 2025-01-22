@@ -1,13 +1,15 @@
+import { CompanyAsset } from "@/app/types/generic";
+
 interface ComponentStatusProps {
-  status: string;
+  status: CompanyAsset['status'];
 }
 
 export function ComponentStatus({ status }: ComponentStatusProps) {
   switch (status) {
     case 'alert':
-      return <div className="w-4 h-4 bg-red-500 rounded-full"></div>;
+      return <div className="size-2 bg-red-500 rounded-full"></div>;
     case 'operating':
-      return <div className="w-4 h-4 bg-green-500 rounded-full"></div>;
+      return <div className="size-2 bg-green-500 rounded-full"></div>;
     default:
       return null;
   }

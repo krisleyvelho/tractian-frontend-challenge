@@ -1,16 +1,15 @@
-import { appRouter } from "@/trpc/server/root";
-import { fetchRequestHandler } from "@trpc/server/adapters/fetch";
-
+import { appRouter } from '@/trpc/server/root';
+import { fetchRequestHandler } from '@trpc/server/adapters/fetch';
 
 /**
  * Configure basic CORS headers
  * You should extend this to match your needs
  */
 function setCorsHeaders(res: Response) {
-  res.headers.set("Access-Control-Allow-Origin", "*");
-  res.headers.set("Access-Control-Request-Method", "*");
-  res.headers.set("Access-Control-Allow-Methods", "OPTIONS, GET, POST");
-  res.headers.set("Access-Control-Allow-Headers", "*");
+  res.headers.set('Access-Control-Allow-Origin', '*');
+  res.headers.set('Access-Control-Request-Method', '*');
+  res.headers.set('Access-Control-Allow-Methods', 'OPTIONS, GET, POST');
+  res.headers.set('Access-Control-Allow-Headers', '*');
 }
 
 export function OPTIONS() {
@@ -21,9 +20,9 @@ export function OPTIONS() {
   return response;
 }
 
-const handler = async (req: any) => {
-  const response = await fetchRequestHandler({
-    endpoint: "/api/trpc",
+const handler = async (req: Request) => {
+  const response: Response = await fetchRequestHandler({
+    endpoint: '/api/trpc',
     router: appRouter,
     req,
     onError({ error, path }) {
@@ -33,6 +32,6 @@ const handler = async (req: any) => {
 
   setCorsHeaders(response);
   return response;
-}
+};
 
 export { handler as GET, handler as POST };
