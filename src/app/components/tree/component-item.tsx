@@ -50,7 +50,7 @@ export function ComponentItem({
           />
         )}
         <span className="text-left font-roboto text-sm">{item.name}</span>
-        <ComponentStatus status={'status' in item ? item.status : undefined} />
+        <ComponentStatus status={item.status} sensorType={item.sensorType} />
       </div>
     </Button>
   );

@@ -18,6 +18,8 @@ export default {
         'title-active-color': '#24292F',
         'title-inactive-color': '#77818C',
         'muted-gray': '#88929C',
+        'defaultGreen': '#52C41A',
+        'defaultRed': '#ED3833',
         defaultSlate: '#D8DFE6',
       },
       borderColor: {},

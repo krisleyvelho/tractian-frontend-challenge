@@ -46,7 +46,7 @@ export function SelectedItemList() {
         <span className="font-semibold text-title-active-color text-lg ">
           {selectedEntity.name}
         </span>
-        <ComponentStatus status={selectedEntity.status} />
+        <ComponentStatus status={selectedEntity.status} sensorType={selectedEntity.sensorType} />
       </div>
       <div className="flex flex-col p-6 gap-6">
         <div className="flex gap-4 w-full">
