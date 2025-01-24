@@ -31,15 +31,6 @@ If more time were available, the following improvements could be implemented:
 - **Addition of tooltips**: Adding tooltips to buttons and key interactions to clarify functionality and improve user experience.  
 - **Page structuring**: Better organization and modularization of pages for improved readability and project maintenance.  
 
-
-
-If more time were available, the following improvements could be implemented:  
-
-- **Tree state management optimization**: Refactoring to make global state management more scalable and efficient.  
-- **Layout improvements**: Enhancing layout responsiveness for devices of different sizes, especially smaller screens.  
-- **Addition of tooltips**: Adding tooltips to buttons and key interactions to clarify functionality and improve user experience.  
-- **Page structuring**: Better organization and modularization of pages for improved readability and project maintenance.  
-
 ## Contributions  
 
 Contributions are welcome! Feel free to open issues and pull requests with suggestions and improvements.  
